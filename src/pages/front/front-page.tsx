@@ -1,15 +1,12 @@
-import HeaderLogo from '../header-logo/header-logo';
-import Offer from './offer';
+import HeaderLogo from '../../components/header-logo/header-logo';
+import { OfferType } from '../../types/offer-type';
+import OffersList from '../../components/offers-list/offers-list';
 
 type MainProps = {
-  offersCount: number;
+  offers: OfferType[];
 };
 
-function FrontPage({offersCount}: MainProps): JSX.Element {
-  const offers: JSX.Element[] = [];
-  for (let i = 0; i < offersCount; i++) {
-    offers.push(<Offer />);
-  }
+function FrontPage({offers}: MainProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -95,9 +92,7 @@ function FrontPage({offersCount}: MainProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                {offers}
-              </div>
+              <OffersList offers={offers}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
