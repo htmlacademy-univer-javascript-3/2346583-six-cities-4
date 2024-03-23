@@ -12,6 +12,12 @@ function OfferPage({offers}: OfferProps): JSX.Element {
   const params = useParams();
   const currentOffer = offers.find((offer) => offer.id === params.id);
 
+  const premiumBlock = (
+    <div className="offer__mark">
+      <span>Premium</span>
+    </div>
+  );
+
   return currentOffer ? (
     <div className="page">
       <header className="header">
@@ -44,33 +50,31 @@ function OfferPage({offers}: OfferProps): JSX.Element {
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/room.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
               <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
+                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
               </div>
             </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark">
-                <span>Premium</span>
-              </div>
+              {currentOffer.isPremium ? premiumBlock : null}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
-                  {currentOffer.description}
+                  {currentOffer.title}
                 </h1>
                 <button className="offer__bookmark-button button" type="button">
                   <svg className="offer__bookmark-icon" width="31" height="33">
@@ -81,14 +85,14 @@ function OfferPage({offers}: OfferProps): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: '80%'}}></span>
+                  <span style={{width: `${currentOffer.rating / 5 * 100}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">4.8</span>
+                <span className="offer__rating-value rating__value">{currentOffer.rating}</span>
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  Apartment
+                  {currentOffer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
                   3 Bedrooms
