@@ -1,20 +1,29 @@
+import { useNavigate } from 'react-router-dom';
 import { OfferType } from '../../types/offer-type';
 
-function FavoritesOffer({mark, src, price, description, type}: OfferType): JSX.Element {
+type FavoritesProps = {
+  offerData: OfferType;
+};
+
+function FavoritesOffer({offerData}: FavoritesProps): JSX.Element {
+  const navigate = useNavigate();
+  const premiumBlock = (
+    <div className="place-card__mark">
+      <span>Premium</span>
+    </div>
+  );
   return (
     <article className="favorites__card place-card">
-      <div className="place-card__mark">
-        <span>{mark}</span>
-      </div>
+      {offerData.isPremium ? premiumBlock : null}
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <a href="#">
-          <img className="place-card__image" src={src} width="150" height="110" alt="Place image"/>
+        <a onClick={() => navigate(`/offer/${offerData.id}`)}>
+          <img className="place-card__image" src={offerData.previewImage} width="150" height="110" alt="Place image"/>
         </a>
       </div>
       <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{price}</b>
+            <b className="place-card__price-value">&euro;{offerData.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
@@ -31,9 +40,9 @@ function FavoritesOffer({mark, src, price, description, type}: OfferType): JSX.E
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{description}</a>
+          <a onClick={() => navigate(`/offer/${offerData.id}`)}>{offerData.title}</a>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">{offerData.type}</p>
       </div>
     </article>
   );
