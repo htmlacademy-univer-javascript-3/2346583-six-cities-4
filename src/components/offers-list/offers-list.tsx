@@ -48,7 +48,7 @@ function OffersList({offers}: OfferListProps): JSX.Element {
       </section>
       <div className="cities__right-section">
         <section className="cities__map map">
-          <Map offers={offers} selectedOffer={selectedOffer}/>
+          <Map offers={offers} selectedOffer={selectedOffer} city={offers[0].city}/>
         </section>
       </div>
     </div>

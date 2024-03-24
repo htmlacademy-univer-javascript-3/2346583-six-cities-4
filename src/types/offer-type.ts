@@ -1,16 +1,11 @@
+import { CityType } from './city-type';
+
 export type OfferType = {
   id: string;
   title: string;
   type: string;
   price: number;
-  city: {
-    name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-  };
+  city: CityType;
   location: {
     latitude: number;
     longitude: number;
@@ -20,4 +15,4 @@ export type OfferType = {
   isPremium: boolean;
   rating: number;
   previewImage: string;
-  };
+};

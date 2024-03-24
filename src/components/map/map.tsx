@@ -1,52 +1,53 @@
 import { useEffect, useRef } from 'react';
 import { OfferType } from '../../types/offer-type';
 import useMap from '../../hooks/use-map';
-import leaflet from 'leaflet';
+import {Icon, Marker, layerGroup} from 'leaflet';
+import { CityType } from '../../types/city-type';
 
 type MapProps = {
   offers: OfferType[];
-  selectedOffer: OfferType;
+  selectedOffer: OfferType | undefined;
+  city: CityType;
 };
 
-export function Map({offers, selectedOffer}: MapProps){
+const defaultCustomIcon = new Icon({
+  iconUrl: 'img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+const currentCustomIcon = new Icon({
+  iconUrl: 'img/pin-active.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+export function Map({offers, selectedOffer, city}: MapProps){
   const mapRef = useRef(null);
-  const map = useMap(mapRef, selectedOffer);
-
-  const defaultCustomIcon = leaflet.icon({
-    iconUrl: 'img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
-  const currentCustomIcon = leaflet.icon({
-    iconUrl: 'img/pin-active.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
+  const map = useMap(mapRef, city);
 
   useEffect(() => {
     if (map) {
+      const markerLayer = layerGroup().addTo(map);
       offers.forEach((offer) => {
-        leaflet
-          .marker({
-            lat: offer.location.latitude,
-            lng: offer.location.longitude,
-          }, {
-            icon: (offer.title === selectedOffer.title)
+        const marker = new Marker({
+          lat: offer.location.latitude,
+          lng: offer.location.longitude,
+        });
+        marker
+          .setIcon(
+            selectedOffer !== undefined && offer.title === selectedOffer.title
               ? currentCustomIcon
-              : defaultCustomIcon,
-          })
-          .addTo(map);
+              : defaultCustomIcon
+          )
+          .addTo(markerLayer);
       });
+      return () => {
+        map.removeLayer(markerLayer);
+      };
     }
   }, [map, offers, selectedOffer]);
 
 
-  return (
-    <div
-      style={{height: '400px', width:'400px'}}
-      ref={mapRef}
-    >
-    </div>
-  );
+  return <div style={{height: '100%'}} ref={mapRef}></div>;
 }

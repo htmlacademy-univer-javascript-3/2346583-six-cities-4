@@ -1,28 +1,29 @@
-import React, {useEffect, useState, useRef} from 'react';
-import leaflet from 'leaflet';
-import { OfferType } from '../types/offer-type';
+import {useEffect, useState, MutableRefObject, useRef} from 'react';
+import {Map, TileLayer} from 'leaflet';
+import { CityType } from '../types/city-type';
 
-function useMap(mapRef: React.MutableRefObject<null>, {city}: OfferType) {
-  const isRenderedRef = useRef(false);
-  const [map, setMap] = useState<leaflet.Map | null>(null);
+function useMap(
+  mapRef: MutableRefObject<HTMLElement | null>,
+  city: CityType): Map | null {
+  const [map, setMap] = useState<Map | null>(null);
+  const isRenderedRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
-      const instance = leaflet.map(mapRef.current, {
+      const instance = new Map(mapRef.current, {
         center: {
           lat: city.location.latitude,
           lng: city.location.longitude
         },
         zoom: city.location.zoom,
       });
-      leaflet
-        .tileLayer(
-          'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-          {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          },
-        )
-        .addTo(instance);
+      const layer = new TileLayer(
+        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        },
+      );
+      instance.addLayer(layer);
 
       setMap(instance);
       isRenderedRef.current = true;
