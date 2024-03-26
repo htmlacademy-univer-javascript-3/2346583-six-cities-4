@@ -3,11 +3,12 @@ import { OfferType } from '../../types/offer-type';
 
 
 type OfferProps = {
-  onMouseOver: (id: string) => void;
+  onMouseEnter: (id: string) => void;
+  onMouseLeave: () => void;
   offerData: OfferType;
 };
 
-function Offer({onMouseOver, offerData}: OfferProps): JSX.Element {
+function Offer({onMouseEnter, onMouseLeave, offerData}: OfferProps): JSX.Element {
   const navigate = useNavigate();
 
   const premiumBlock = (
@@ -17,10 +18,15 @@ function Offer({onMouseOver, offerData}: OfferProps): JSX.Element {
   );
 
   return (
-    <article className="cities__card place-card" onMouseOver={(evt) => {
-      evt.preventDefault();
-      onMouseOver(offerData.id);
-    }}
+    <article className="cities__card place-card"
+      onMouseEnter={(evt) => {
+        evt.preventDefault();
+        onMouseEnter(offerData.id);
+      }}
+      onMouseLeave={(evt) => {
+        evt.preventDefault();
+        onMouseLeave();
+      }}
     >
       {offerData.isPremium ? premiumBlock : null}
       <div className="cities__image-wrapper place-card__image-wrapper">

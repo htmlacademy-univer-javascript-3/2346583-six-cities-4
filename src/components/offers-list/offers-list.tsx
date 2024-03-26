@@ -8,20 +8,19 @@ type OfferListProps = {
 };
 
 function OffersList({offers}: OfferListProps): JSX.Element {
-  const [selectedOffer, setSelectedOffer] = useState(offers[0]);
+  const [selectedOffer, setSelectedOffer] = useState<OfferType | undefined>(undefined);
 
-  const handleMouseOver = (id: string) => {
+  const handleMouseEnter = (id: string) => {
     const activeOffer = offers.find((offer) => offer.id === id);
     if (activeOffer !== undefined && activeOffer !== selectedOffer) {
       setSelectedOffer(activeOffer);
     }
   };
 
-  const offersList: JSX.Element[] = [];
-  for (let i = 0; i < offers.length; i++) {
-    offersList.push(
-      <Offer onMouseOver={handleMouseOver} offerData={offers[i]}/>);
-  }
+  const handleMouseLeave = () => {
+    setSelectedOffer(undefined);
+  };
+
   return (
     <div className="cities__places-container container">
       <section className="cities__places places">
@@ -43,7 +42,7 @@ function OffersList({offers}: OfferListProps): JSX.Element {
           </ul>
         </form>
         <div className="cities__places-list places__list tabs__content">
-          {offersList}
+          {offers.map((offer) => (<Offer key={offer.id} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} offerData={offer}/>))}
         </div>
       </section>
       <div className="cities__right-section">
