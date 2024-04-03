@@ -1,14 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { OfferType } from '../../types/offer-type';
 
 
 type OfferProps = {
-  onMouseOver: (id: string) => void;
+  onMouseEnter: (id: string) => void;
+  onMouseLeave: () => void;
   offerData: OfferType;
 };
 
-function Offer({onMouseOver, offerData}: OfferProps): JSX.Element {
-  const navigate = useNavigate();
+function Offer({onMouseEnter, onMouseLeave, offerData}: OfferProps): JSX.Element {
 
   const premiumBlock = (
     <div className="place-card__mark">
@@ -17,16 +17,21 @@ function Offer({onMouseOver, offerData}: OfferProps): JSX.Element {
   );
 
   return (
-    <article className="cities__card place-card" onMouseOver={(evt) => {
-      evt.preventDefault();
-      onMouseOver(offerData.id);
-    }}
+    <article className="cities__card place-card"
+      onMouseEnter={(evt) => {
+        evt.preventDefault();
+        onMouseEnter(offerData.id);
+      }}
+      onMouseLeave={(evt) => {
+        evt.preventDefault();
+        onMouseLeave();
+      }}
     >
       {offerData.isPremium ? premiumBlock : null}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a onClick={() => navigate(`/offer/${offerData.id}`)}>
+        <Link to={`/offer/${offerData.id}`}>
           <img className="place-card__image" src={offerData.previewImage} width="260" height="200" alt="Place image" />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -48,7 +53,7 @@ function Offer({onMouseOver, offerData}: OfferProps): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a onClick={() => navigate(`/offer/${offerData.id}`)}>{offerData.title}</a>
+          <Link to={`/offer/${offerData.id}`}>{offerData.title}</Link>
         </h2>
         <p className="place-card__type">{offerData.type}</p>
       </div>

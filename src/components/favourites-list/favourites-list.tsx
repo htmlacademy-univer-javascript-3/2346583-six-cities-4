@@ -7,11 +7,6 @@ type FavouritesListProps = {
 };
 
 function FavouritesList({offers}: FavouritesListProps): JSX.Element {
-  const offersList: JSX.Element[] = [];
-  for (let i = 0; i < offers.length; i++) {
-    offersList.push(
-      <FavoritesOffer offerData={offers[i]}/>);
-  }
   return (
     <div className="page__favorites-container container">
       <section className="favorites">
@@ -27,7 +22,7 @@ function FavouritesList({offers}: FavouritesListProps): JSX.Element {
             </div>
             <div className="favorites__places">
               <div className="cities__places-list places__list tabs__content">
-                {offersList}
+                {offers.map((offer) => (<FavoritesOffer key={offer.id} offerData={offer}/>))}
               </div>
             </div>
           </li>

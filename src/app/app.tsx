@@ -4,7 +4,7 @@ import LoginPage from '../pages/login/login-page';
 import FavouritesPage from '../pages/favourites/favourites-page';
 import Page404 from '../pages/page404/page404';
 import OfferPage from '../pages/offer/offer-page';
-import AuthorizationStatus from '../const';
+import { AuthorizationStatus } from '../const';
 import PrivateRoute from '../private-route/private-route';
 import { OfferType } from '../types/offer-type';
 import { mockFavoutites } from '../mock/offers';
