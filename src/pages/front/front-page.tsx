@@ -1,6 +1,7 @@
 import HeaderLogo from '../../components/header-logo/header-logo';
 import { OfferType } from '../../types/offer-type';
 import OffersList from '../../components/offers-list/offers-list';
+import { ListType } from '../../const';
 
 type MainProps = {
   offers: OfferType[];
@@ -73,7 +74,7 @@ function FrontPage({offers}: MainProps): JSX.Element {
           </section>
         </div>
         <div className="cities">
-          <OffersList offers={offers}/>
+          <OffersList offers={offers} type={ListType.FRONT}/>
         </div>
       </main>
     </div>
