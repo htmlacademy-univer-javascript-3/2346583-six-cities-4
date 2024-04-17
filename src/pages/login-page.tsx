@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import HeaderLogo from '../../components/header-logo/header-logo';
+import HeaderLogo from '../components/header-logo';
 
 function LoginPage(): JSX.Element {
   return (

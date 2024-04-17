@@ -1,13 +1,35 @@
 import { Link } from 'react-router-dom';
-import HeaderLogo from '../../components/header-logo/header-logo';
-import { OfferType } from '../../types/offer-type';
-import FavouritesList from '../../components/favourites-list/favourites-list';
+import HeaderLogo from '../components/header-logo';
+import { OfferType } from '../types/offer-type';
+import FavouritesList from '../components/favourites-list';
+import { CITIES } from '../const';
 
 type FavouriteProps = {
   offers: OfferType[];
 };
 
 function FavouritesPage({offers}: FavouriteProps): JSX.Element {
+  const favouritesByCities: JSX.Element[] = [];
+  CITIES.map((city) => {
+    const filteredOffers = offers.filter((offer) => offer.city.name === city.name);
+    if (filteredOffers.length !== 0) {
+      favouritesByCities.push(
+        <li key={city.name} className="favorites__locations-items">
+          <div className="favorites__locations locations locations--current">
+            <div className="locations__item">
+              <Link className="locations__item-link" to="#todo">
+                <span>{city.name}</span>
+              </Link>
+            </div>
+          </div>
+          <div className="favorites__places">
+            <FavouritesList offers={filteredOffers}/>
+          </div>
+        </li>
+      );
+    }
+  });
+
   return (
     <div className="page">
       <header className="header">
@@ -21,7 +43,7 @@ function FavouritesPage({offers}: FavouriteProps): JSX.Element {
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
                     <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{offers.length}</span>
                   </Link>
                 </li>
                 <li className="header__nav-item">
@@ -36,7 +58,14 @@ function FavouritesPage({offers}: FavouriteProps): JSX.Element {
       </header>
 
       <main className="page__main page__main--favorites">
-        <FavouritesList offers={offers}/>
+        <div className="page__favorites-container container">
+          <section className="favorites">
+            <h1 className="favorites__title">Saved listing</h1>
+            <ul className="favorites__list">
+              {favouritesByCities}
+            </ul>
+          </section>
+        </div>
       </main>
       <footer className="footer container">
         <Link className="footer__logo-link" to="/">

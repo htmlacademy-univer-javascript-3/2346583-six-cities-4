@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { OfferType } from '../../types/offer-type';
-import useMap from '../../hooks/use-map';
+import { OfferType } from '../types/offer-type';
+import useMap from '../hooks/use-map';
 import {Icon, Marker, layerGroup} from 'leaflet';
-import { CityType } from '../../types/city-type';
+import { CityType } from '../types/city-type';
 
 type MapProps = {
   offers: OfferType[];
