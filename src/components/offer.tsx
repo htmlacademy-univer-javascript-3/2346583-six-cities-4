@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { OfferType } from '../../types/offer-type';
+import { OfferType } from '../types/offer-type';
 
 
 type OfferProps = {

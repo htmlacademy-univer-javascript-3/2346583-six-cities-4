@@ -1,24 +1,19 @@
-import FrontPage from '../pages/front/front-page';
+import FrontPage from '../pages/front-page';
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import LoginPage from '../pages/login/login-page';
-import FavouritesPage from '../pages/favourites/favourites-page';
-import Page404 from '../pages/page404/page404';
-import OfferPage from '../pages/offer/offer-page';
+import LoginPage from '../pages/login-page';
+import FavouritesPage from '../pages/favourites-page';
+import Page404 from '../pages/page404';
+import OfferPage from '../pages/offer-page';
 import { AuthorizationStatus } from '../const';
 import PrivateRoute from '../private-route/private-route';
-import { OfferType } from '../types/offer-type';
-import { mockFavoutites } from '../mock/offers';
+import { mockFavoutites, mockOffers } from '../mock/offers';
 
-type AppProps = {
-  offers: OfferType[];
-};
-
-function App({offers}: AppProps): JSX.Element {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<FrontPage offers={offers}/>} />
+          <Route index element={<FrontPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="favourites" element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.VALID}>
@@ -26,7 +21,7 @@ function App({offers}: AppProps): JSX.Element {
             </PrivateRoute>
           }
           />
-          <Route path="offer/:id" element={<OfferPage offers={offers} />} />
+          <Route path="offer/:id" element={<OfferPage offers={mockOffers} />} />
         </Route>
         <Route path='*' element={<Page404 />} />
       </Routes>

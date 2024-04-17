@@ -1,13 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
-import Page404 from '../page404/page404';
-import HeaderLogo from '../../components/header-logo/header-logo';
-import { OfferType } from '../../types/offer-type';
-import CommentForm from '../../components/comment-form/comment-form';
-import ReviewsList from '../../components/review-list/reviews-list';
-import { mockReviews } from '../../mock/reviews';
-import { mockNearby } from '../../mock/offers';
-import OffersList from '../../components/offers-list/offers-list';
-import { ListType } from '../../const';
+import Page404 from './page404';
+import HeaderLogo from '../components/header-logo';
+import { OfferType } from '../types/offer-type';
+import CommentForm from '../components/comment-form';
+import ReviewsList from '../components/reviews-list';
+import { mockReviews } from '../mock/reviews';
+import OffersList from '../components/offers-list';
+import { ListType } from '../const';
+import { useAppSelector } from '../hooks';
+import { Map } from '../components/map';
 
 type OfferProps = {
   offers: OfferType[];
@@ -16,7 +17,9 @@ type OfferProps = {
 function OfferPage({offers}: OfferProps): JSX.Element {
   const params = useParams();
   const currentOffer = offers.find((offer) => offer.id === params.id);
-
+  const selectedOffer = useAppSelector((state) => state.selectedOfferNearby);
+  const offersNearby = useAppSelector((state) => state.offersNearby);
+  const selectedCity = useAppSelector((state) => state.city);
   const premiumBlock = (
     <div className="offer__mark">
       <span>Premium</span>
@@ -175,7 +178,10 @@ function OfferPage({offers}: OfferProps): JSX.Element {
           </div>
         </section>
         <div className="container">
-          <OffersList offers={mockNearby} type={ListType.NEARBY}/>
+          <section className="offer__map map">
+            <Map offers={offersNearby} selectedOffer={selectedOffer} city={selectedCity}/>
+          </section>
+          <OffersList offers={offersNearby} type={ListType.NEARBY}/>
         </div>
       </main>
     </div>
