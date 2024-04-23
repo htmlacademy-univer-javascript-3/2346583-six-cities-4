@@ -1,45 +1,32 @@
 import { OfferType } from '../types/offer-type';
 import Offer from './offer';
 import { ListType } from '../const';
-import { changeSelectedOffer, changeSelectedOfferNearby } from '../store/action';
-import { useAppDispatch} from '../hooks';
+import { useAppSelector } from '../hooks';
+import { sortOffers } from '../utils';
+import NearOffer from './near-offer';
 
 type OfferListProps = {
   offers: OfferType[];
   type: ListType;
+  onMouseEnter: (id: string) => void;
+  onMouseLeave: () => void;
 };
 
-function OffersList({offers, type}: OfferListProps): JSX.Element {
-  const dispatch = useAppDispatch();
-  const handleMouseEnterFront = (id: string) => {
-    const activeOffer = offers.find((offer) => offer.id === id);
-    if (activeOffer !== undefined) {
-      dispatch(changeSelectedOffer(activeOffer));
-    }
-  };
-
-  const handleMouseEnterNearby = (id: string) => {
-    const activeOffer = offers.find((offer) => offer.id === id);
-    if (activeOffer !== undefined) {
-      dispatch(changeSelectedOfferNearby(activeOffer));
-    }
-  };
-
-  const handleMouseLeave = () => {
-    dispatch(changeSelectedOffer(undefined));
-  };
-
+function OffersList({offers, type, onMouseEnter, onMouseLeave}: OfferListProps): JSX.Element {
+  const selectedSortType = useAppSelector((state) => state.selectedSortType);
   return (
     type === ListType.FRONT
       ?
       <div className="cities__places-list places__list tabs__content">
-        {offers.map((offer) => (<Offer key={offer.id} onMouseEnter={handleMouseEnterFront} onMouseLeave={handleMouseLeave} offerData={offer}/>))}
+        {sortOffers(offers, selectedSortType).map((offer) => (
+          <Offer key={offer.id} offerData={offer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}/>
+        ))}
       </div>
       :
       <section className="near-places places">
         <h2 className="near-places__title">Other places in the neighbourhood</h2>
         <div className="near-places__list places__list">
-          {offers.map((offer) => (<Offer key={offer.id} onMouseEnter={handleMouseEnterNearby} onMouseLeave={handleMouseLeave} offerData={offer}/>))}
+          {offers.map((offer) => (<NearOffer key={offer.id} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} offerData={offer}/>))}
         </div>
       </section>
   );

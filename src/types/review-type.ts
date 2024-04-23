@@ -4,4 +4,5 @@ export type ReviewType = {
   name: string;
   text: string;
   date: string;
+  rating: number;
 };

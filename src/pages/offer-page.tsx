@@ -9,6 +9,7 @@ import OffersList from '../components/offers-list';
 import { ListType } from '../const';
 import { useAppSelector } from '../hooks';
 import { Map } from '../components/map';
+import { useState } from 'react';
 
 type OfferProps = {
   offers: OfferType[];
@@ -17,9 +18,18 @@ type OfferProps = {
 function OfferPage({offers}: OfferProps): JSX.Element {
   const params = useParams();
   const currentOffer = offers.find((offer) => offer.id === params.id);
-  const selectedOffer = useAppSelector((state) => state.selectedOfferNearby);
   const offersNearby = useAppSelector((state) => state.offersNearby);
   const selectedCity = useAppSelector((state) => state.city);
+  const [selectedOffer, setSelectedOffer] = useState<OfferType | undefined>(undefined);
+
+  const handleSelectedOfferEnter = (id: string) => {
+    setSelectedOffer(offers.find((offer) => offer.id === id));
+  };
+
+  const handleSelectedOfferLeave = () => {
+    setSelectedOffer(undefined);
+  };
+
   const premiumBlock = (
     <div className="offer__mark">
       <span>Premium</span>
@@ -181,7 +191,7 @@ function OfferPage({offers}: OfferProps): JSX.Element {
           <section className="offer__map map">
             <Map offers={offersNearby} selectedOffer={selectedOffer} city={selectedCity}/>
           </section>
-          <OffersList offers={offersNearby} type={ListType.NEARBY}/>
+          <OffersList offers={offersNearby} type={ListType.NEARBY} onMouseEnter={handleSelectedOfferEnter} onMouseLeave={handleSelectedOfferLeave}/>
         </div>
       </main>
     </div>
