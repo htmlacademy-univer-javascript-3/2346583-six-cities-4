@@ -1,42 +1,39 @@
 import {createReducer} from '@reduxjs/toolkit';
-import { changeCity, changeSelectedOffer, changeSelectedOfferNearby, getOffers } from './action';
+import { changeCity, changeSelectedOffer, changeSelectedOfferNearby, getOffers, setSelectedOffer, setSortType } from './action';
 import { mockNearby, mockOffers } from '../mock/offers';
-import { CITIES } from '../const';
+import { CITIES, SORT_TYPES } from '../const';
 import { CityType } from '../types/city-type';
 import { OfferType } from '../types/offer-type';
 
 type StateType = {
   city: CityType;
   offers: OfferType[];
-  selectedOffer: OfferType | undefined;
   offersNearby: OfferType[];
-  selectedOfferNearby: OfferType | undefined;
+  selectedOffer: OfferType | undefined;
+  selectedSortType: string;
 }
 
 const initialState: StateType = {
   city: CITIES[0],
   offers: mockOffers,
-  selectedOffer: undefined,
   offersNearby: mockNearby,
-  selectedOfferNearby: undefined
+  selectedOffer: undefined,
+  selectedSortType: SORT_TYPES.Popular
 };
 
 const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase(changeCity, (state, action) => {
       state.city = action.payload;
-    });
-  builder
+    })
     .addCase(getOffers, (state) => {
       state.offers = mockOffers;
-    });
-  builder
-    .addCase(changeSelectedOffer, (state, action) => {
+    })
+    .addCase(setSelectedOffer, (state, action) => {
       state.selectedOffer = action.payload;
-    });
-  builder
-    .addCase(changeSelectedOfferNearby, (state, action) => {
-      state.selectedOfferNearby = action.payload;
+    })
+    .addCase(setSortType, (state, action) => {
+      state.selectedSortType = action.payload;
     });
 });
 
