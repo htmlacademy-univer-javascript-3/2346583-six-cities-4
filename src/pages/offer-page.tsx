@@ -11,11 +11,8 @@ import { useAppSelector } from '../hooks';
 import { Map } from '../components/map';
 import { useState } from 'react';
 
-type OfferProps = {
-  offers: OfferType[];
-};
-
-function OfferPage({offers}: OfferProps): JSX.Element {
+function OfferPage(): JSX.Element {
+  const offers: OfferType[] = useAppSelector((state) => state.offers);
   const params = useParams();
   const currentOffer = offers.find((offer) => offer.id === params.id);
   const offersNearby = useAppSelector((state) => state.offersNearby);

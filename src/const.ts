@@ -66,3 +66,7 @@ export const CITIES: CityType[] = [
     }
   }
 ];
+
+export enum APIRoute {
+  Offers = '/offers',
+}
