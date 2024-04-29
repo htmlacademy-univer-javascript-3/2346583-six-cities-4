@@ -6,9 +6,17 @@ import Page404 from '../pages/page404';
 import OfferPage from '../pages/offer-page';
 import { AuthorizationStatus } from '../const';
 import PrivateRoute from '../private-route/private-route';
-import { mockFavoutites, mockOffers } from '../mock/offers';
+import { mockFavoutites} from '../mock/offers';
+import LoadingScreen from '../pages/loading-screen';
+import { useAppSelector } from '../hooks';
 
 function App(): JSX.Element {
+  const areOffersLoading = useAppSelector((state) => state.offersLoadingState);
+  if (areOffersLoading) {
+    return (
+      <LoadingScreen />
+    );
+  }
   return (
     <BrowserRouter>
       <Routes>
@@ -21,7 +29,7 @@ function App(): JSX.Element {
             </PrivateRoute>
           }
           />
-          <Route path="offer/:id" element={<OfferPage offers={mockOffers} />} />
+          <Route path="offer/:id" element={<OfferPage />} />
         </Route>
         <Route path='*' element={<Page404 />} />
       </Routes>
