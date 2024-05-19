@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import HeaderLogo from '../components/header-logo';
 import { FormEvent, useRef } from 'react';
 import { useAppDispatch } from '../hooks';
-import { loginAction } from '../store/api-actions';
+import { login } from '../store/api-actions';
 
 function LoginPage(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
@@ -15,7 +15,7 @@ function LoginPage(): JSX.Element {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
-      dispatch(loginAction({
+      dispatch(login({
         login: loginRef.current.value,
         password: passwordRef.current.value
       }));

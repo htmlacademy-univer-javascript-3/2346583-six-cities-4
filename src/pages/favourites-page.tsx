@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
-import { OfferType } from '../types/offer-type';
 import FavouritesList from '../components/favourites-list';
 import Header from '../components/header';
 import { CITIES } from '../const';
+import { OfferType } from '../types/offer-type';
+import { useAppSelector } from '../hooks';
 
-type FavouriteProps = {
-  offers: OfferType[];
-};
-
-function FavouritesPage({offers}: FavouriteProps): JSX.Element {
+function FavouritesPage(): JSX.Element {
+  const offers: OfferType[] = useAppSelector((state) => state.offers);
   const favouritesByCities: JSX.Element[] = [];
   Object.values(CITIES).map((city) => {
     const filteredOffers = offers.filter((offer) => offer.city.name === city.name);
