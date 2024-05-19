@@ -1,12 +1,13 @@
 import { OfferType } from '../types/offer-type';
 import OffersList from '../components/offers-list';
 import { CitiesList } from '../components/cities-list';
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { useEffect, useState } from 'react';
 import { ListType } from '../const';
 import { Map } from '../components/map';
 import OffersSorting from '../components/offers-sorting';
 import Header from '../components/header';
+import { clearOfferPageData } from '../store/action';
 
 function FrontPage(): JSX.Element {
   const offers: OfferType[] = useAppSelector((state) => state.offers);
@@ -26,6 +27,9 @@ function FrontPage(): JSX.Element {
   const handleSelectedOfferLeave = () => {
     setSelectedOffer(undefined);
   };
+
+  const dispatch = useAppDispatch();
+  dispatch(clearOfferPageData());
 
   return (
     <div className="page page--gray page--main">

@@ -3,21 +3,36 @@ import Page404 from './page404';
 import { OfferType } from '../types/offer-type';
 import CommentForm from '../components/comment-form';
 import ReviewsList from '../components/reviews-list';
-import { mockReviews } from '../mock/reviews';
 import OffersList from '../components/offers-list';
-import { ListType } from '../const';
-import { useAppSelector } from '../hooks';
+import { AuthorizationStatus, ListType } from '../const';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { Map } from '../components/map';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/header';
+import { fetchOfferPageData } from '../store/api-actions';
+import LoadingScreen from './loading-screen';
 
 function OfferPage(): JSX.Element {
   const offers: OfferType[] = useAppSelector((state) => state.offers);
   const params = useParams();
-  const currentOffer = offers.find((offer) => offer.id === params.id);
-  const offersNearby = useAppSelector((state) => state.offersNearby);
   const selectedCity = useAppSelector((state) => state.city);
+  const dispatch = useAppDispatch();
   const [selectedOffer, setSelectedOffer] = useState<OfferType | undefined>(undefined);
+
+  useEffect(() => {
+    dispatch(fetchOfferPageData({ id: params.id ?? '' }));
+  }, [params.id, dispatch]);
+
+  const { currentOffer, nearestOffers, reviews } = useAppSelector(
+    ({ offerPageData }) => ({
+      currentOffer: offerPageData.fullOffer,
+      nearestOffers: offerPageData.nearestOffers,
+      reviews: offerPageData.reviews,
+    })
+  );
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isAuthed = (authorizationStatus === AuthorizationStatus.VALID);
 
   const handleSelectedOfferEnter = (id: string) => {
     setSelectedOffer(offers.find((offer) => offer.id === id));
@@ -32,7 +47,9 @@ function OfferPage(): JSX.Element {
       <span>Premium</span>
     </div>
   );
-
+  if (currentOffer === undefined) {
+    return(<Page404 />);
+  }
   return currentOffer ? (
     <div className="page">
       <Header />
@@ -40,29 +57,16 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={currentOffer.previewImage} alt="Photo studio" />
-              </div>
+              {currentOffer.images.map((image) => (
+                <div className="offer__image-wrapper" key={image}>
+                  <img className="offer__image" src={image} alt="Photo studio" />
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {currentOffer.isPremium ? premiumBlock : null}
+              {currentOffer.isPremium && premiumBlock}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
                   {currentOffer.title}
@@ -86,10 +90,10 @@ function OfferPage(): JSX.Element {
                   {currentOffer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  3 Bedrooms
+                  {currentOffer.bedrooms} Bedroom{currentOffer.bedrooms === 1 || 's'}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max 4 adults
+                  Max {currentOffer.maxAdults} adult{currentOffer.maxAdults === 1 || 's'}
                 </li>
               </ul>
               <div className="offer__price">
@@ -99,76 +103,50 @@ function OfferPage(): JSX.Element {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  <li className="offer__inside-item">
-                    Wi-Fi
-                  </li>
-                  <li className="offer__inside-item">
-                    Washing machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Towels
-                  </li>
-                  <li className="offer__inside-item">
-                    Heating
-                  </li>
-                  <li className="offer__inside-item">
-                    Coffee machine
-                  </li>
-                  <li className="offer__inside-item">
-                    Baby seat
-                  </li>
-                  <li className="offer__inside-item">
-                    Kitchen
-                  </li>
-                  <li className="offer__inside-item">
-                    Dishwasher
-                  </li>
-                  <li className="offer__inside-item">
-                    Cabel TV
-                  </li>
-                  <li className="offer__inside-item">
-                    Fridge
-                  </li>
+                  {currentOffer.goods.map(
+                    (good) => (<li key={good} className="offer__inside-item">{good}</li>)
+                  )}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="offer__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
+                    <img className="offer__avatar user__avatar" src={currentOffer.host.avatarUrl} width="74" height="74" alt="Host avatar" />
                   </div>
                   <span className="offer__user-name">
-                    Angelina
+                    {currentOffer.host.name}
                   </span>
-                  <span className="offer__user-status">
-                    Pro
-                  </span>
+                  {currentOffer.host.isPro && <span className="offer__user-status">Pro</span>}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                  </p>
-                  <p className="offer__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
+                    {currentOffer.description}
                   </p>
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <ReviewsList reviews={mockReviews}/>
-                <CommentForm />
+                <ReviewsList
+                  reviews={reviews.slice().sort((a, b) => {
+                    const dateA = new Date(a.date).getTime();
+                    const dateB = new Date(b.date).getTime();
+                    return dateB - dateA;
+                  }).slice(0, 10)}
+                />
+                { isAuthed && <CommentForm id={params.id!} />}
               </section>
             </div>
           </div>
         </section>
         <div className="container">
           <section className="offer__map map">
-            <Map offers={offersNearby} selectedOffer={selectedOffer} city={selectedCity}/>
+            <Map offers={nearestOffers} selectedOffer={selectedOffer} city={selectedCity}/>
           </section>
-          <OffersList offers={offersNearby} type={ListType.NEARBY} onMouseEnter={handleSelectedOfferEnter} onMouseLeave={handleSelectedOfferLeave}/>
+          <OffersList offers={nearestOffers} type={ListType.NEARBY} onMouseEnter={handleSelectedOfferEnter} onMouseLeave={handleSelectedOfferLeave}/>
         </div>
       </main>
     </div>
-  ) : (<Page404 />);
+  ) : <LoadingScreen />;
 }
 
 export default OfferPage;

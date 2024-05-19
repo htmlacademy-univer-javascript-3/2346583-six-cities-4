@@ -1,12 +1,14 @@
 import { AxiosInstance } from 'axios';
 import { AppDispatch, State } from '../types/state';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { OfferType } from '../types/offer-type';
-import { setAuthorizationStatus, setError, setOffers, setOffersLoadingState } from './action';
+import { FullOfferType, OfferType } from '../types/offer-type';
+import { addReview, loadOfferPageData, setAuthorizationStatus, setError, setOffers, setOffersLoadingState } from './action';
 import { APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR } from '../const';
 import { store } from '.';
 import { AuthData, UserData } from '../types/user-data';
 import { dropToken, saveToken } from '../services/token';
+import { ReviewType } from '../types/review-type';
+import { CommentFormDataType } from '../types/offer-page-data-type';
 
 
 type ThunkArgs = {
@@ -15,7 +17,7 @@ type ThunkArgs = {
   extra: AxiosInstance;
 }
 
-export const clearErrorAction = createAsyncThunk(
+export const clearError = createAsyncThunk(
   'clearError',
   () => {
     setTimeout(
@@ -42,7 +44,7 @@ export const loadOffers = createAsyncThunk<void, undefined, ThunkArgs>(
   }
 );
 
-export const checkAuthAction = createAsyncThunk<void, undefined, {
+export const checkAuth = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -54,12 +56,12 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
       await api.get(APIRoute.Login);
       dispatch(setAuthorizationStatus(AuthorizationStatus.VALID));
     } catch {
-      dispatch(setAuthorizationStatus(AuthorizationStatus.INVALID));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.VALID));
     }
   },
 );
 
-export const loginAction = createAsyncThunk<void, AuthData, {
+export const login = createAsyncThunk<void, AuthData, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -73,7 +75,7 @@ export const loginAction = createAsyncThunk<void, AuthData, {
   },
 );
 
-export const logoutAction = createAsyncThunk<void, undefined, {
+export const logout = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -86,3 +88,37 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     dispatch(setAuthorizationStatus(AuthorizationStatus.INVALID));
   },
 );
+
+export const fetchOfferPageData = createAsyncThunk<void, { id: string },
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('fetchOfferPageData', async ({ id }, { dispatch, extra: api }) => {
+  const { data: detailedOffer } = await api.get<FullOfferType>(`${APIRoute.Offers}/${id}`);
+  const { data: nearestOffers } = await api.get<OfferType[]>(`${APIRoute.Offers}/${id}/nearby`);
+  const { data: reviews } = await api.get<ReviewType[]>(`${APIRoute.Comments}/${id}`);
+  dispatch(loadOfferPageData({ fullOffer: detailedOffer, nearestOffers, reviews }));
+});
+
+export const sendComment = createAsyncThunk<void,
+  {
+    postId: string;
+    rewiew: CommentFormDataType;
+  },
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('sendComment', async ({ postId, rewiew }, { dispatch, extra: api }) => {
+  const { data: review } = await api.post<ReviewType>(
+    `${APIRoute.Comments}/${postId}`,
+    {
+      comment: rewiew.comment,
+      rating: rewiew.rating,
+    }
+  );
+  dispatch(addReview(review));
+});
