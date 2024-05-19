@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
-import { changeCity, setOffers, setOffersLoadingState, setSelectedOffer, setSortType } from './action';
+import { changeCity, setAuthorizationStatus, setError, setOffers, setOffersLoadingState, setSelectedOffer, setSortType } from './action';
 import { mockNearby} from '../mock/offers';
-import { CITIES, SORT_TYPES } from '../const';
+import { AuthorizationStatus, CITIES, SORT_TYPES } from '../const';
 import { CityType } from '../types/city-type';
 import { OfferType } from '../types/offer-type';
 
@@ -12,15 +12,19 @@ type StateType = {
   selectedOffer: OfferType | undefined;
   selectedSortType: string;
   offersLoadingState: boolean;
+  error: string | null;
+  authorizationStatus: AuthorizationStatus;
 }
 
 const initialState: StateType = {
-  city: CITIES[0],
+  city: CITIES.Paris,
   offers: [],
   offersNearby: mockNearby,
   selectedOffer: undefined,
   selectedSortType: SORT_TYPES.Popular,
-  offersLoadingState: false
+  offersLoadingState: false,
+  error: null,
+  authorizationStatus: AuthorizationStatus.Unknown
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -39,6 +43,12 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setOffersLoadingState, (state, action) => {
       state.offersLoadingState = action.payload;
+    })
+    .addCase(setError, (state, action) => {
+      state.error = action.payload;
+    })
+    .addCase(setAuthorizationStatus, (state, action) => {
+      state.authorizationStatus = action.payload;
     });
 });
 

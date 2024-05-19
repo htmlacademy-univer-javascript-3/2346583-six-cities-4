@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import HeaderLogo from '../components/header-logo';
 import { OfferType } from '../types/offer-type';
 import FavouritesList from '../components/favourites-list';
+import Header from '../components/header';
 import { CITIES } from '../const';
 
 type FavouriteProps = {
@@ -10,7 +10,7 @@ type FavouriteProps = {
 
 function FavouritesPage({offers}: FavouriteProps): JSX.Element {
   const favouritesByCities: JSX.Element[] = [];
-  CITIES.map((city) => {
+  Object.values(CITIES).map((city) => {
     const filteredOffers = offers.filter((offer) => offer.city.name === city.name);
     if (filteredOffers.length !== 0) {
       favouritesByCities.push(
@@ -32,39 +32,25 @@ function FavouritesPage({offers}: FavouriteProps): JSX.Element {
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <HeaderLogo />
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="#todo">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">{offers.length}</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#todo">
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              {favouritesByCities}
-            </ul>
-          </section>
+          {favouritesByCities.length ? (
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                {favouritesByCities}
+              </ul>
+            </section>
+          ) : (
+            <section className="favorites favorites--empty">
+              <h1 className="visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
+              </div>
+            </section>
+          )}
         </div>
       </main>
       <footer className="footer container">
