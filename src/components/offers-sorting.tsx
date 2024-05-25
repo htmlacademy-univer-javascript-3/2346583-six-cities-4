@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { setSortType } from '../store/action';
 import { SORT_TYPES } from '../const';
+import { changeSortingType, getSelectedSortType } from '../store';
 
 function OffersSorting() {
   const [isOpen, setIsOpen] = useState(false);
-  const selectedSortType = useAppSelector((state) => state.selectedSortType);
+  const selectedSortType = useAppSelector(getSelectedSortType);
 
   const dispatch = useAppDispatch();
 
@@ -27,9 +27,9 @@ function OffersSorting() {
         {Object.values(SORT_TYPES).map((type) => (
           <li
             key={type}
-            className={`places__option ${selectedSortType === type.toString() && 'places__option--active'}`}
+            className={`places__option ${selectedSortType === type && 'places__option--active'}`}
             tabIndex={0}
-            onClick={() => dispatch(setSortType(type))}
+            onClick={() => dispatch(changeSortingType(type))}
           >
             {type}
           </li>
@@ -40,4 +40,6 @@ function OffersSorting() {
   );
 }
 
-export default OffersSorting;
+const memoizedOffersSorting = memo(OffersSorting);
+
+export default memoizedOffersSorting;

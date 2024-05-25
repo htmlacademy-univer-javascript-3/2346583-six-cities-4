@@ -1,36 +1,27 @@
-import { OfferType } from '../types/offer-type';
-import Offer from './offer';
-import { ListType } from '../const';
+import { memo } from 'react';
 import { useAppSelector } from '../hooks';
 import { sortOffers } from '../utils';
-import NearOffer from './near-offer';
+import Offer from './offer';
+import { getSelectedSortType } from '../store';
+import { OfferType } from '../types/offer-type';
 
-type OfferListProps = {
+type OffersListProps = {
   offers: OfferType[];
-  type: ListType;
-  onMouseEnter : (id: string) => void;
-  onMouseLeave : () => void;
+  onMouseEnter: (point: OfferType) => void;
+  onMouseLeave: () => void;
 };
 
-function OffersList({offers, type, onMouseEnter, onMouseLeave}: OfferListProps): JSX.Element {
-  const selectedSortType = useAppSelector((state) => state.selectedSortType);
+function OffersList({offers, onMouseEnter, onMouseLeave}: OffersListProps): JSX.Element {
+  const selectedSortType = useAppSelector(getSelectedSortType);
   return (
-    type === ListType.FRONT
-      ?
-      <div className="cities__places-list places__list tabs__content">
-        {sortOffers(offers, selectedSortType).map((offer) => (
-          <Offer key={offer.id} offerData={offer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}/>
-        ))}
-      </div>
-      :
-      <section className="near-places places">
-        <h2 className="near-places__title">Other places in the neighbourhood</h2>
-        <div className="near-places__list places__list">
-          {offers.map((offer) => (<NearOffer key={offer.id} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} offerData={offer}/>))}
-        </div>
-      </section>
+    <div className="cities__places-list places__list tabs__content">
+      {sortOffers(offers, selectedSortType).map((offer) => (
+        <Offer key={offer.id} offer={offer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+      ))}
+    </div>
   );
 }
 
-export default OffersList;
+const memoizedOffersList = memo(OffersList);
 
+export default memoizedOffersList;

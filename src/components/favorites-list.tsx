@@ -1,11 +1,11 @@
 import { OfferType } from '../types/offer-type';
-import FavoritesOffer from './favourites-offer';
+import FavoritesOffer from './favorites-offer';
 
-type FavouritesListProps = {
+type favoritesListProps = {
   offers: OfferType[];
 };
 
-function FavouritesList({offers}: FavouritesListProps): JSX.Element {
+function favoritesList({offers}: favoritesListProps): JSX.Element {
   return (
     <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (<FavoritesOffer key={offer.id} offerData={offer}/>))}
@@ -13,4 +13,4 @@ function FavouritesList({offers}: FavouritesListProps): JSX.Element {
   );
 }
 
-export default FavouritesList;
+export default favoritesList;

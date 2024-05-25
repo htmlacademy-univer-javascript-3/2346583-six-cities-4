@@ -1,51 +1,50 @@
 import { Link } from 'react-router-dom';
-import FavouritesList from '../components/favourites-list';
 import Header from '../components/header';
 import { CITIES } from '../const';
 import { OfferType } from '../types/offer-type';
 import { useAppSelector } from '../hooks';
 import LoadingScreen from './loading-screen';
+import FavoritesOffer from '../components/favorites-offer';
+import { getAreFavoritesLoading, getFavorites } from '../store/slices/favorites';
 
-function FavouritesPage(): JSX.Element {
-  const offers: OfferType[] = useAppSelector((state) => state.favourites);
-  const areFavouritesLoading = useAppSelector((state) => state.favouritesLoadingState);
+function FavoritesPage(): JSX.Element {
+  const offers: OfferType[] = useAppSelector(getFavorites);
+  const areFavoritesLoading = useAppSelector(getAreFavoritesLoading);
 
-  if (areFavouritesLoading) {
+  if (areFavoritesLoading) {
     return (
       <LoadingScreen />
     );
   }
-  const favouritesByCities: JSX.Element[] = [];
-  Object.values(CITIES).map((city) => {
-    const filteredOffers = offers.filter((offer) => offer.city.name === city.name);
-    if (filteredOffers.length !== 0) {
-      favouritesByCities.push(
-        <li key={city.name} className="favorites__locations-items">
-          <div className="favorites__locations locations locations--current">
-            <div className="locations__item">
-              <Link className="locations__item-link" to="#todo">
-                <span>{city.name}</span>
-              </Link>
-            </div>
-          </div>
-          <div className="favorites__places">
-            <FavouritesList offers={filteredOffers}/>
-          </div>
-        </li>
-      );
-    }
-  });
 
   return (
     <div className="page">
       <Header />
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
-          {favouritesByCities.length ? (
+          {offers.length ? (
             <section className="favorites">
               <h1 className="favorites__title">Saved listing</h1>
               <ul className="favorites__list">
-                {favouritesByCities}
+                {Object.values(CITIES).map((city) => {
+                  const cityOffers = offers.filter((offer) => offer.city.name === city.name);
+                  return (cityOffers.length !== 0) && (
+                    <li className="favorites__locations-items" key={city.name}>
+                      <div className="favorites__locations locations locations--current">
+                        <div className="locations__item">
+                          <Link className="locations__item-link" to="/">
+                            <span>{city.name}</span>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="favorites__places">
+                        {cityOffers.map((offer) => (
+                          <FavoritesOffer key={offer.id} offerData={offer} />
+                        ))}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           ) : (
@@ -61,10 +60,10 @@ function FavouritesPage(): JSX.Element {
       </main>
       <footer className="footer container">
         <Link className="footer__logo-link" to="/">
-          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33"/>
+          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
         </Link>
       </footer>
     </div>
   );
 }
-export default FavouritesPage;
+export default FavoritesPage;

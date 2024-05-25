@@ -1,64 +1,53 @@
-import { OfferType } from '../types/offer-type';
 import { Link } from 'react-router-dom';
 import { formatRating } from '../utils';
-import { useAppDispatch } from '../hooks';
-import { setSelectedOffer } from '../store/action';
+import FavoriteButton from './favorite-button';
+import { OfferType } from '../types/offer-type';
 
 type NearOfferProps = {
-  onMouseEnter: (id: string) => void;
-  onMouseLeave: () => void;
-  offerData: OfferType;
+  offer: OfferType;
 };
 
-export default function NearOffer({onMouseEnter, onMouseLeave, offerData}: NearOfferProps): JSX.Element {
-  const dispatch = useAppDispatch();
+function NearOffer({ offer }: NearOfferProps): JSX.Element {
   return (
     <article
-      onClick={(evt) => {
-        evt.preventDefault();
-        dispatch(setSelectedOffer(offerData));
-      }}
-      onMouseEnter={(evt) => {
-        evt.preventDefault();
-        onMouseEnter(offerData.id);
-      }}
-      onMouseLeave={(evt) => {
-        evt.preventDefault();
-        onMouseLeave();
-      }}
       className="near-places__card place-card"
     >
-      <Link to={`/offer/${offerData.id}`}>
-        {offerData.isPremium && <div className="place-card__mark"> <span>Premium</span> </div>}
+      <Link to={`/offer/${offer.id}`}>
+        {offer.isPremium && <div className="place-card__mark"> <span>Premium</span> </div>}
         <div className="cities__image-wrapper place-card__image-wrapper">
 
-          <img className="place-card__image" src={offerData.previewImage} width="260" height="200" alt="Place image" />
+          <img className="place-card__image" src={offer.previewImage} width="260" height="200" alt="Place image" />
         </div>
         <div className="place-card__info">
           <div className="place-card__price-wrapper">
             <div className="place-card__price">
-              <b className="place-card__price-value">&euro;{offerData.price}</b>
+              <b className="place-card__price-value">&euro;{offer.price}</b>
               <span className="place-card__price-text">&#47;&nbsp;night</span>
             </div>
-            <button className="place-card__bookmark-button button" type="button">
-              <svg className="place-card__bookmark-icon" width="18" height="19">
-                <use xlinkHref="#icon-bookmark"></use>
-              </svg>
-              <span className="visually-hidden">To bookmarks</span>
-            </button>
+            <FavoriteButton
+              isFavorite={offer.isFavorite}
+              id={offer.id}
+              width="18"
+              height="19"
+              buttonClass="place-card__bookmark-button"
+              activeClass="place-card__bookmark-button--active"
+              iconClass="place-card__bookmark-icon"
+            />
           </div>
           <div className="place-card__rating rating">
             <div className="place-card__stars rating__stars">
-              <span style={{width: formatRating(offerData.rating)}}></span>
+              <span style={{width: formatRating(offer.rating)}}></span>
               <span className="visually-hidden">Rating</span>
             </div>
           </div>
           <h2 className="place-card__name">
-            {offerData.title}
+            {offer.title}
           </h2>
-          <p className="place-card__type">{offerData.type}</p>
+          <p className="place-card__type">{offer.type}</p>
         </div>
       </Link>
     </article>
   );
 }
+
+export default NearOffer;

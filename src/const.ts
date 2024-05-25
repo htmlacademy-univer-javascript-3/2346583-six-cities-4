@@ -1,11 +1,9 @@
+import { CityType } from './types/city-type';
+
 export enum AuthorizationStatus {
-  VALID = 1,
-  INVALID = 0,
-  Unknown
-}
-export enum ListType {
-  NEARBY = 1,
-  FRONT = 0
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
 }
 
 export enum SORT_TYPES {
@@ -15,7 +13,11 @@ export enum SORT_TYPES {
   TopRatedFirst = 'Top rated first',
 }
 
-export const CITIES = {
+type Cities = {
+  [key: string]: CityType;
+};
+
+export const CITIES: Cities = {
   Paris: {
     name: 'Paris',
     location: {
@@ -71,7 +73,44 @@ export enum APIRoute {
   Login = '/login',
   Logout = '/logout',
   Comments = '/comments',
-  Favoutites = '/favorite'
+  Nearby = '/nearby',
+  Favorite = '/favorite',
 }
 
 export const TIMEOUT_SHOW_ERROR = 2000;
+
+export enum NameSpace {
+  App = 'APP',
+  User = 'USER',
+  FewOffersData = 'FEW_OFFERS_DATA',
+  SingleOfferData = 'SINGLE_OFFER_DATA',
+  favoritesData = 'favoriteS_DATA',
+  NearbyOffersData = 'NEAR_OFFERS_DATA',
+  ReviewsData = 'REVIEWS_DATA',
+}
+
+export enum ROUTES {
+  Main = '/',
+  Login = '/login',
+  Favorites = '/favorites',
+  Offer = '/offer/:id',
+  NotFound = '/*',
+}
+
+export enum LoadingStatus {
+  Idle = 'idle',
+  Loading = 'loading',
+  Success = 'success',
+  Error = 'error',
+}
+
+export const BACKEND_URL = 'https://14.design.htmlacademy.pro/six-cities';
+export const REQUEST_TIMEOUT = 5000;
+
+export const StarRate = {
+  terribly: 1,
+  badly: 2,
+  'not bad': 3,
+  good: 4,
+  perfect: 5,
+};

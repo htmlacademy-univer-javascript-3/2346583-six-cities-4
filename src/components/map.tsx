@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { OfferType } from '../types/offer-type';
+import { FullOfferType, OfferType } from '../types/offer-type';
 import useMap from '../hooks/use-map';
 import { Icon, Marker } from 'leaflet';
 import { CityType } from '../types/city-type';
-import { LocationType } from '../types/locationType';
 
 type MapProps = {
   offers: OfferType[];
-  selectedOfferLocation: LocationType | undefined;
   city: CityType;
+  selectedOffer: OfferType | FullOfferType | undefined;
 };
 
 const defaultCustomIcon = new Icon({
@@ -23,7 +22,7 @@ const currentCustomIcon = new Icon({
   iconAnchor: [20, 40],
 });
 
-export function Map({offers, selectedOfferLocation, city}: MapProps){
+export function Map({offers, selectedOffer, city}: MapProps){
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
   const markersRef = useRef<Marker[]>([]);
@@ -34,7 +33,7 @@ export function Map({offers, selectedOfferLocation, city}: MapProps){
       markersRef.current = [];
 
       offers
-        .filter((offer) => offer.location !== selectedOfferLocation)
+        .filter((offer) => offer !== selectedOffer)
         .forEach((offer) => {
           const marker = new Marker({
             lat: offer.location.latitude,
@@ -43,20 +42,20 @@ export function Map({offers, selectedOfferLocation, city}: MapProps){
           markersRef.current.push(marker);
         });
 
-      if (selectedOfferLocation) {
+      if (selectedOffer) {
         const selectedMarker = new Marker({
-          lat: selectedOfferLocation.latitude,
-          lng: selectedOfferLocation.longitude,
+          lat: selectedOffer.location.latitude,
+          lng: selectedOffer.location.longitude,
         }, {icon: currentCustomIcon}).addTo(map);
         markersRef.current.push(selectedMarker);
         map.setView({
-          lat: selectedOfferLocation.latitude,
-          lng: selectedOfferLocation.longitude
-        }, selectedOfferLocation.zoom);
+          lat: selectedOffer.location.latitude,
+          lng: selectedOffer.location.longitude
+        }, selectedOffer.location.zoom);
       }
     }
 
-  }, [map, offers, selectedOfferLocation]);
+  }, [map, offers, selectedOffer]);
 
 
   return <div style={{height: '100%'}} ref={mapRef}></div>;
