@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { AuthorizationStatus } from '../const';
 import HeaderLogo from './header-logo';
-import { logout } from '../store/api-actions';
-import { OfferType } from '../types/offer-type';
+import { getAuthCheckedStatus, getFavoritesCount, getUserInfo, logoutAction } from '../store';
+import { memo } from 'react';
 
 function Header(): JSX.Element {
-  const offers: OfferType[] = useAppSelector((state) => state.offers);
-  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const isAuthed = (authorizationStatus === AuthorizationStatus.VALID);
+
+  const userInfo = useAppSelector(getUserInfo);
+  const favoriteOffersCount = useAppSelector(getFavoritesCount);
+  const isAuthed = useAppSelector(getAuthCheckedStatus);
+
   return (
     <header className="header">
       <div className="container">
@@ -23,9 +23,9 @@ function Header(): JSX.Element {
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
                   <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
+                    <div className="header__avatar-wrapper user__avatar-wrapper" style={{backgroundImage: `url(${userInfo?.avatarUrl})`}}>
                     </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                    <span className="header__user-name user__name">{userInfo?.email}</span>
                     <span className="header__favorite-count">{favoriteOffersCount}</span>
                   </Link>
                 </li>
@@ -33,7 +33,7 @@ function Header(): JSX.Element {
                   <Link
                     className="header__nav-link"
                     onClick={() => {
-                      dispatch(logout());
+                      dispatch(logoutAction());
                     }}
                     to="/"
                   >
@@ -59,4 +59,6 @@ function Header(): JSX.Element {
   );
 }
 
-export default Header;
+const memoizedHeader = memo(Header);
+
+export default memoizedHeader;

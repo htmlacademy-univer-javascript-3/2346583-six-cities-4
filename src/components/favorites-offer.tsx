@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { OfferType } from '../types/offer-type';
+import FavoriteButton from './favorite-button';
 
 type FavoritesProps = {
   offerData: OfferType;
@@ -7,6 +8,7 @@ type FavoritesProps = {
 
 function FavoritesOffer({offerData}: FavoritesProps): JSX.Element {
   const navigate = useNavigate();
+
   const premiumBlock = (
     <div className="place-card__mark">
       <span>Premium</span>
@@ -26,12 +28,15 @@ function FavoritesOffer({offerData}: FavoritesProps): JSX.Element {
             <b className="place-card__price-value">&euro;{offerData.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
-            </svg>
-            <span className="visually-hidden">In bookmarks</span>
-          </button>
+          <FavoriteButton
+            isFavorite={offerData.isFavorite}
+            id={offerData.id}
+            width="18"
+            height="19"
+            buttonClass="place-card__bookmark-button"
+            activeClass="place-card__bookmark-button--active"
+            iconClass="place-card__bookmark-icon"
+          />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">

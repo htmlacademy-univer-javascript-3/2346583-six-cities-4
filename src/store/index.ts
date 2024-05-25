@@ -1,16 +1,60 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {reducer} from './reducer';
-import { createAPI } from '../services/api';
+export { store } from './store';
 
+export {
+  fetchOfferAction,
+  updateSingleOffer,
+  getOffer,
+  getIsOfferLoading,
+} from './slices/single-offer';
 
-const api = createAPI();
+export {
+  fetchReviewsAction,
+  postReviewAction,
+  setReviewsErrorStatus,
+  getReviewsHasError,
+  getHasError,
+  getReviews,
+  getIsReviewsLoading,
+  getIsReviewsStatusSubmitting,
+} from './slices/review';
 
-export const store = configureStore({
-  reducer: reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: api,
-      },
-    })
-});
+export {
+  fetchNearbyAction,
+  updateFewNearby,
+  getNearbyOffers,
+  getIsNearbyOffersLoading,
+} from './slices/near-offers';
+
+export {
+  fetchfavoritesAction,
+  changefavoriteStatusAction,
+  updateFewFavorites,
+  getFavorites,
+  getIsFavoriteStatusSubmitting,
+  getFavoritesCount,
+  getAreFavoritesLoading,
+} from './slices/favorites';
+
+export {
+  changeSortingType,
+  changeCity,
+  getSelectedSortType,
+  getSelectedCity,
+} from './slices/global';
+
+export {
+  fetchOffersAction,
+  updateFewOffers,
+  getOffers,
+  getIsOffersLoading,
+} from './slices/few-offers';
+
+export {
+  checkAuthAction,
+  loginAction,
+  logoutAction,
+  getIsSubmittingLogin,
+  getAuthCheckedStatus,
+  getUserInfo,
+  getAuthorizationStatus,
+} from './slices/user';

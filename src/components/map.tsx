@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { OfferType } from '../types/offer-type';
+import { FullOfferType, OfferType } from '../types/offer-type';
 import useMap from '../hooks/use-map';
-import {Icon, Marker, layerGroup} from 'leaflet';
+import { Icon, Marker } from 'leaflet';
 import { CityType } from '../types/city-type';
 
 type MapProps = {
   offers: OfferType[];
-  selectedOffer: OfferType | undefined;
   city: CityType;
+  selectedOffer: OfferType | FullOfferType | undefined;
 };
 
 const defaultCustomIcon = new Icon({
@@ -25,27 +25,36 @@ const currentCustomIcon = new Icon({
 export function Map({offers, selectedOffer, city}: MapProps){
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
+  const markersRef = useRef<Marker[]>([]);
 
   useEffect(() => {
     if (map) {
-      const markerLayer = layerGroup().addTo(map);
-      offers.forEach((offer) => {
-        const marker = new Marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude,
+      markersRef.current.forEach((marker) => map.removeLayer(marker));
+      markersRef.current = [];
+
+      offers
+        .filter((offer) => offer !== selectedOffer)
+        .forEach((offer) => {
+          const marker = new Marker({
+            lat: offer.location.latitude,
+            lng: offer.location.longitude,
+          }, {icon: defaultCustomIcon}).addTo(map);
+          markersRef.current.push(marker);
         });
-        marker
-          .setIcon(
-            selectedOffer !== undefined && offer.title === selectedOffer.title
-              ? currentCustomIcon
-              : defaultCustomIcon
-          )
-          .addTo(markerLayer);
-      });
-      return () => {
-        map.removeLayer(markerLayer);
-      };
+
+      if (selectedOffer) {
+        const selectedMarker = new Marker({
+          lat: selectedOffer.location.latitude,
+          lng: selectedOffer.location.longitude,
+        }, {icon: currentCustomIcon}).addTo(map);
+        markersRef.current.push(selectedMarker);
+        map.setView({
+          lat: selectedOffer.location.latitude,
+          lng: selectedOffer.location.longitude
+        }, selectedOffer.location.zoom);
+      }
     }
+
   }, [map, offers, selectedOffer]);
 
 
