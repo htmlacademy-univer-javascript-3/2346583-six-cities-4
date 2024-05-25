@@ -8,8 +8,8 @@ import NearOffer from './near-offer';
 type OfferListProps = {
   offers: OfferType[];
   type: ListType;
-  onMouseEnter: (id: string) => void;
-  onMouseLeave: () => void;
+  onMouseEnter : (id: string) => void;
+  onMouseLeave : () => void;
 };
 
 function OffersList({offers, type, onMouseEnter, onMouseLeave}: OfferListProps): JSX.Element {

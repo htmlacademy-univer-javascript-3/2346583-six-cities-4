@@ -34,7 +34,6 @@ function FrontPage(): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <Header/>
-
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
@@ -56,7 +55,7 @@ function FrontPage(): JSX.Element {
                   <Map
                     offers={currentCityOffers}
                     city={city}
-                    selectedOffer={selectedOffer}
+                    selectedOfferLocation={selectedOffer?.location}
                   />
                 </section>
               </div>

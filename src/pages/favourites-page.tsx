@@ -4,9 +4,17 @@ import Header from '../components/header';
 import { CITIES } from '../const';
 import { OfferType } from '../types/offer-type';
 import { useAppSelector } from '../hooks';
+import LoadingScreen from './loading-screen';
 
 function FavouritesPage(): JSX.Element {
-  const offers: OfferType[] = useAppSelector((state) => state.offers);
+  const offers: OfferType[] = useAppSelector((state) => state.favourites);
+  const areFavouritesLoading = useAppSelector((state) => state.favouritesLoadingState);
+
+  if (areFavouritesLoading) {
+    return (
+      <LoadingScreen />
+    );
+  }
   const favouritesByCities: JSX.Element[] = [];
   Object.values(CITIES).map((city) => {
     const filteredOffers = offers.filter((offer) => offer.city.name === city.name);

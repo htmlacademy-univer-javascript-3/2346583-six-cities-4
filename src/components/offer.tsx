@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { OfferType } from '../types/offer-type';
+import { useAppDispatch } from '../hooks';
+import { changeOfferStatus } from '../store/api-actions';
 
 
 type OfferProps = {
@@ -9,12 +11,20 @@ type OfferProps = {
 };
 
 function Offer({onMouseEnter, onMouseLeave, offerData}: OfferProps): JSX.Element {
+  const dispatch = useAppDispatch();
 
   const premiumBlock = (
     <div className="place-card__mark">
       <span>Premium</span>
     </div>
   );
+
+  const addToFavourites = () => {
+    dispatch(changeOfferStatus({
+      offerId: offerData.id,
+      status: 1
+    }));
+  };
 
   return (
     <article className="cities__card place-card"
@@ -39,7 +49,7 @@ function Offer({onMouseEnter, onMouseLeave, offerData}: OfferProps): JSX.Element
             <b className="place-card__price-value">&euro;{offerData.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button className="place-card__bookmark-button button" type="button" onClick={addToFavourites}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

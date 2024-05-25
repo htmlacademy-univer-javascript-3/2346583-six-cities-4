@@ -1,4 +1,5 @@
 import { CityType } from './city-type';
+import { LocationType } from './locationType';
 
 export type OfferType = {
   id: string;
@@ -6,11 +7,7 @@ export type OfferType = {
   type: string;
   price: number;
   city: CityType;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
+  location: LocationType;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
@@ -23,11 +20,7 @@ export type FullOfferType = {
   type: string;
   price: number;
   city: CityType;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
+  location: LocationType;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;

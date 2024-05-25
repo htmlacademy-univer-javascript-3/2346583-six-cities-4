@@ -3,7 +3,7 @@ export type AuthData = {
   password: string;
 };
 
-export type UserData = {
+export type UserDataType = {
   name: string;
   avatarUrl: string;
   isPro: boolean;

@@ -7,9 +7,10 @@ import { OfferType } from '../types/offer-type';
 
 function Header(): JSX.Element {
   const offers: OfferType[] = useAppSelector((state) => state.offers);
-  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+  const favoriteOffersCount = useAppSelector((state) => state.favouritesNumber);
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const user = useAppSelector((state) => state.user);
   const isAuthed = (authorizationStatus === AuthorizationStatus.VALID);
   return (
     <header className="header">
@@ -23,9 +24,9 @@ function Header(): JSX.Element {
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
                   <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
+                    <div className="header__avatar-wrapper user__avatar-wrapper" >
                     </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                    <span className="header__user-name user__name">{user?.email}</span>
                     <span className="header__favorite-count">{favoriteOffersCount}</span>
                   </Link>
                 </li>

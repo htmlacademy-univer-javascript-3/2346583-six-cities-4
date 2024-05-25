@@ -4,7 +4,6 @@ import LoginPage from '../pages/login-page';
 import FavouritesPage from '../pages/favourites-page';
 import Page404 from '../pages/page404';
 import OfferPage from '../pages/offer-page';
-//import { AuthorizationStatus } from '../const';
 import PrivateRoute from '../private-route/private-route';
 import LoadingScreen from '../pages/loading-screen';
 import { useAppSelector } from '../hooks';
@@ -19,7 +18,7 @@ function App(): JSX.Element {
       <LoadingScreen />
     );
   }
-  return (/*authorizationStatus === AuthorizationStatus.Unknown ||*/ areOffersLoading)
+  return (areOffersLoading)
     ? <LoadingScreen /> : (
       <HistoryRouter history={browserHistory}>
         <Routes>

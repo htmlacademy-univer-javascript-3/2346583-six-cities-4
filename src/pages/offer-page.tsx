@@ -1,23 +1,20 @@
 import { useParams } from 'react-router-dom';
 import Page404 from './page404';
-import { OfferType } from '../types/offer-type';
 import CommentForm from '../components/comment-form';
 import ReviewsList from '../components/reviews-list';
 import OffersList from '../components/offers-list';
 import { AuthorizationStatus, ListType } from '../const';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Map } from '../components/map';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Header from '../components/header';
 import { fetchOfferPageData } from '../store/api-actions';
 import LoadingScreen from './loading-screen';
 
 function OfferPage(): JSX.Element {
-  const offers: OfferType[] = useAppSelector((state) => state.offers);
   const params = useParams();
   const selectedCity = useAppSelector((state) => state.city);
   const dispatch = useAppDispatch();
-  const [selectedOffer, setSelectedOffer] = useState<OfferType | undefined>(undefined);
 
   useEffect(() => {
     dispatch(fetchOfferPageData({ id: params.id ?? '' }));
@@ -30,27 +27,22 @@ function OfferPage(): JSX.Element {
       reviews: offerPageData.reviews,
     })
   );
-
+  const selectedOfferLoadingState = useAppSelector((state) => state.selectedOfferLoadingState);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isAuthed = (authorizationStatus === AuthorizationStatus.VALID);
-
-  const handleSelectedOfferEnter = (id: string) => {
-    setSelectedOffer(offers.find((offer) => offer.id === id));
-  };
-
-  const handleSelectedOfferLeave = () => {
-    setSelectedOffer(undefined);
-  };
 
   const premiumBlock = (
     <div className="offer__mark">
       <span>Premium</span>
     </div>
   );
-  if (currentOffer === undefined) {
-    return(<Page404 />);
+  if (selectedOfferLoadingState){
+    return <LoadingScreen />;
   }
-  return currentOffer ? (
+  if (currentOffer === undefined) {
+    return <Page404 />;
+  }
+  return (
     <div className="page">
       <Header />
       <main className="page__main page__main--offer">
@@ -140,13 +132,13 @@ function OfferPage(): JSX.Element {
         </section>
         <div className="container">
           <section className="offer__map map">
-            <Map offers={nearestOffers} selectedOffer={selectedOffer} city={selectedCity}/>
+            <Map offers={nearestOffers.slice(0,3)} selectedOfferLocation={currentOffer.location} city={selectedCity}/>
           </section>
-          <OffersList offers={nearestOffers} type={ListType.NEARBY} onMouseEnter={handleSelectedOfferEnter} onMouseLeave={handleSelectedOfferLeave}/>
+          <OffersList offers={nearestOffers.slice(0,3)} type={ListType.NEARBY} onMouseEnter={() => {}} onMouseLeave={() => {}}/>
         </div>
       </main>
     </div>
-  ) : <LoadingScreen />;
+  );
 }
 
 export default OfferPage;
