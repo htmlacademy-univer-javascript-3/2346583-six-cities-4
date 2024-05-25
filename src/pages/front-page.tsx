@@ -1,4 +1,4 @@
-import { CitiesList } from '../components/cities-list';
+import MemoizedCitiesList from '../components/cities-list';
 import { useAppSelector } from '../hooks';
 import Header from '../components/header';
 import { getOffers, getSelectedCity } from '../store';
@@ -18,7 +18,7 @@ function FrontPage(): JSX.Element {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <CitiesList />
+            <MemoizedCitiesList />
           </section>
         </div>
         <CityOffers

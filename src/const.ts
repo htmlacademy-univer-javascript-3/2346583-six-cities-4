@@ -106,11 +106,3 @@ export enum LoadingStatus {
 
 export const BACKEND_URL = 'https://14.design.htmlacademy.pro/six-cities';
 export const REQUEST_TIMEOUT = 5000;
-
-export const StarRate = {
-  terribly: 1,
-  badly: 2,
-  'not bad': 3,
-  good: 4,
-  perfect: 5,
-};
