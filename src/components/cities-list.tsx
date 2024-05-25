@@ -3,8 +3,9 @@ import { useAppDispatch } from '../hooks';
 import { changeCity } from '../store';
 import { CityType } from '../types/city-type';
 import { CitiesElement } from './cities-element';
+import { memo } from 'react';
 
-export function CitiesList() {
+function CitiesList() {
   const dispatch = useAppDispatch();
   const handleCityChange = (city: CityType) => {
     dispatch(changeCity(city));
@@ -21,3 +22,7 @@ export function CitiesList() {
     </ul>
   );
 }
+
+const MemoizedCitiesList = memo(CitiesList);
+
+export default MemoizedCitiesList;
