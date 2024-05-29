@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { APIRoute, ROUTES, NameSpace } from '../../../const';
+import { APIRoute, AppRoutes, NameSpace } from '../../../const';
 import { redirectToRoute } from '../../action';
 import { AppDispatch, State } from '../../../types/state';
 import { AxiosInstance } from 'axios';
@@ -20,7 +20,7 @@ FullOfferType | null,
       const { data } = await api.get<FullOfferType>(`${APIRoute.Offers}/${id}`);
       return data;
     } catch (e) {
-      dispatch(redirectToRoute(ROUTES.NotFound));
+      dispatch(redirectToRoute(AppRoutes.NotFound));
       return null;
     }
   }

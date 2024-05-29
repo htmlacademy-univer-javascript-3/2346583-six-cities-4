@@ -1,16 +1,16 @@
-import { CITIES, NameSpace, SORT_TYPES } from '../../../const';
+import { CITIES, NameSpace, SortTypes } from '../../../const';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CityType } from '../../../types/city-type';
 
 
 type GlobalState = {
   selectedCity: CityType;
-  selectedSortType: SORT_TYPES;
+  selectedSortType: SortTypes;
 };
 
 const initialState: GlobalState = {
   selectedCity: CITIES.Paris,
-  selectedSortType: SORT_TYPES.Popular,
+  selectedSortType: SortTypes.Popular,
 };
 
 export const globalState = createSlice({
@@ -20,7 +20,7 @@ export const globalState = createSlice({
     changeCity: (state, action: PayloadAction<CityType>) => {
       state.selectedCity = action.payload;
     },
-    changeSortingType: (state, action: PayloadAction<SORT_TYPES>) => {
+    changeSortingType: (state, action: PayloadAction<SortTypes>) => {
       state.selectedSortType = action.payload;
     },
   },
