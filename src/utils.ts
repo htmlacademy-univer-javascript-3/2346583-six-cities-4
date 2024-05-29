@@ -1,4 +1,4 @@
-import { SORT_TYPES } from './const';
+import { SortTypes } from './const';
 import { OfferType } from './types/offer-type';
 
 export const sortOffers = (
@@ -7,14 +7,14 @@ export const sortOffers = (
 ): OfferType[] => {
   const sortedOffers = [...offers];
   switch (sortType) {
-    case SORT_TYPES.Popular: {
+    case SortTypes.Popular: {
       return sortedOffers;
     }
-    case SORT_TYPES.LowToHigh:
+    case SortTypes.LowToHigh:
       return sortedOffers.sort((offerA, offerB) => offerA.price - offerB.price);
-    case SORT_TYPES.HighToLow:
+    case SortTypes.HighToLow:
       return sortedOffers.sort((offerA, offerB) => offerB.price - offerA.price);
-    case SORT_TYPES.TopRatedFirst:
+    case SortTypes.TopRatedFirst:
       return sortedOffers.sort((offerA, offerB) => offerB.rating - offerA.rating);
     default:
       throw new Error('Unknown sort type');

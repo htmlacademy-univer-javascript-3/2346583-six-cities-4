@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { SORT_TYPES } from '../const';
+import { SortTypes } from '../const';
 import { changeSortingType, getSelectedSortType } from '../store';
 
 function OffersSorting() {
@@ -24,7 +24,7 @@ function OffersSorting() {
           ${isOpen ? 'places__options--opened' : ''}`
         }
       >
-        {Object.values(SORT_TYPES).map((type) => (
+        {Object.values(SortTypes).map((type) => (
           <li
             key={type}
             className={`places__option ${selectedSortType === type && 'places__option--active'}`}

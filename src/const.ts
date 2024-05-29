@@ -6,7 +6,7 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
-export enum SORT_TYPES {
+export enum SortTypes {
   Popular = 'Popular',
   LowToHigh = 'Price: low to high',
   HighToLow = 'Price: high to low',
@@ -89,7 +89,7 @@ export enum NameSpace {
   ReviewsData = 'REVIEWS_DATA',
 }
 
-export enum ROUTES {
+export enum AppRoutes {
   Main = '/',
   Login = '/login',
   Favorites = '/favorites',
