@@ -30,7 +30,6 @@ function LoginPage(): JSX.Element {
       navigate('/');
       return ;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     toast.error('Некорректный пароль!');
   };
 
