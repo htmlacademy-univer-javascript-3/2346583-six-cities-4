@@ -28,6 +28,15 @@ export function Map({offers, selectedOffer, city}: MapProps){
   const markersRef = useRef<Marker[]>([]);
 
   useEffect(() => {
+    if (map){
+      map.setView({
+        lat: city.location.latitude,
+        lng: city.location.longitude
+      }, city.location.zoom);
+    }
+  }, [city, map]);
+
+  useEffect(() => {
     if (map) {
       markersRef.current.forEach((marker) => map.removeLayer(marker));
       markersRef.current = [];
@@ -48,14 +57,10 @@ export function Map({offers, selectedOffer, city}: MapProps){
           lng: selectedOffer.location.longitude,
         }, {icon: currentCustomIcon}).addTo(map);
         markersRef.current.push(selectedMarker);
-        map.setView({
-          lat: selectedOffer.location.latitude,
-          lng: selectedOffer.location.longitude
-        }, selectedOffer.location.zoom);
       }
     }
 
-  }, [map, offers, selectedOffer]);
+  }, [city, map, offers, selectedOffer]);
 
 
   return <div style={{height: '100%'}} ref={mapRef}></div>;
