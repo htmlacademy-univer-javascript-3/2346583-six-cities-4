@@ -10,6 +10,7 @@ import FavoriteButton from '../components/favorite-button';
 import NearOffersList from '../components/near-offers-list';
 import ReviewsList from '../components/reviews-list';
 import { fetchNearbyAction, fetchOfferAction, fetchReviewsAction, getAuthCheckedStatus, getIsNearbyOffersLoading, getIsOfferLoading, getIsReviewsLoading, getNearbyOffers, getOffer, getReviews } from '../store';
+import { NEAR_OFFERS_NUM, REVIEWS_NUM } from '../const';
 
 function OfferPage(): JSX.Element {
   const { id } = useParams();
@@ -77,7 +78,7 @@ function OfferPage(): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${detailedOffer.rating / 5 * 100}%`}}></span>
+                  <span style={{width: `${Math.round(detailedOffer.rating) / 5 * 100}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{detailedOffer.rating}</span>
@@ -129,7 +130,7 @@ function OfferPage(): JSX.Element {
                     const dateA = new Date(a.date).getTime();
                     const dateB = new Date(b.date).getTime();
                     return dateB - dateA;
-                  }).slice(0, 10)}
+                  }).slice(0, REVIEWS_NUM)}
                 />
                 { isAuthed && <CommentForm id={id!} />}
               </section>
@@ -144,7 +145,7 @@ function OfferPage(): JSX.Element {
           </section>
         </section>
         <div className="container">
-          <NearOffersList offers={nearbyOffers.slice(0, 3)} />
+          <NearOffersList offers={nearbyOffers.slice(0, NEAR_OFFERS_NUM)} />
         </div>
       </main>
     </div>

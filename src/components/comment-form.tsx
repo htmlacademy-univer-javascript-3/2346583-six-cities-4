@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { LoadingStatus } from '../const';
+import { LoadingStatus, MAX_COMMENT_LENGHT, MIN_COMMENT_LENGHT } from '../const';
 import {
   getIsReviewsStatusSubmitting,
   getReviewsHasError,
@@ -28,7 +28,8 @@ function CommentForm({ id }: CommentFromProps): JSX.Element {
 
   const validateForm = (comment: string, newRating: number) => {
     const isValid = (
-      comment.length >= 50 &&
+      comment.length >= MIN_COMMENT_LENGHT &&
+      comment.length <= MAX_COMMENT_LENGHT &&
       newRating !== 0
     );
     setValid(isValid);

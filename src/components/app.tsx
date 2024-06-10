@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import HistoryRouter from '../components/history-route';
 import { browserHistory } from '../browser-history';
 import { useEffect } from 'react';
-import { AppRoutes } from '../const';
+import { AppRoutes, AuthorizationStatus } from '../const';
 import { fetchfavoritesAction, getAuthCheckedStatus, getAuthorizationStatus, getIsOffersLoading } from '../store';
 
 function App(): JSX.Element {
@@ -36,12 +36,27 @@ function App(): JSX.Element {
         <Routes>
           <Route path={AppRoutes.Main}>
             <Route index element={<FrontPage />} />
-            <Route path={AppRoutes.Login} element={<LoginPage />} />
+            <Route
+              path={AppRoutes.Login}
+              element={
+                <PrivateRoute
+                  authorizationStatus={authorizationStatus}
+                  requieredStatus={AuthorizationStatus.NoAuth}
+                  redirectTo={AppRoutes.Main}
+                >
+                  <LoginPage />
+                </PrivateRoute>
+              }
+            />
             <Route path={AppRoutes.Offer} element={<OfferPage />} />s
             <Route
               path={AppRoutes.Favorites}
               element={
-                <PrivateRoute authorizationStatus={authorizationStatus}>
+                <PrivateRoute
+                  authorizationStatus={authorizationStatus}
+                  requieredStatus={AuthorizationStatus.Auth}
+                  redirectTo={AppRoutes.Login}
+                >
                   <FavoritesPage />
                 </PrivateRoute>
               }
